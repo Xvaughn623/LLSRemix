@@ -6,9 +6,17 @@
 
 import { PassThrough } from "node:stream";
 
+import { renderToString } from 'react-dom/server';
+import { CacheProvider } from '@emotion/react';
+import createEmotionServer from '@emotion/server/create-instance';
+import { RemixServer } from "@remix-run/react";
 import type { AppLoadContext, EntryContext } from "@remix-run/node";
 import { createReadableStreamFromReadable } from "@remix-run/node";
-import { RemixServer } from "@remix-run/react";
+
+import { ServerStyleContext } from './context'
+import createEmotionCache from './createEmotionCache'
+
+// IDK WTF THESE ARE from remix default, will look into later
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
@@ -19,10 +27,6 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  // This is ignored so we can keep it in the template for visibility.  Feel
-  // free to delete this parameter in your app if you're not using it!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  loadContext: AppLoadContext
 ) {
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
@@ -45,14 +49,23 @@ function handleBotRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  const cache = createEmotionCache()
+  const { extractCriticalToChunks } = createEmotionServer(cache)
+
   return new Promise((resolve, reject) => {
     let shellRendered = false;
+
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <ServerStyleContext.Provider value={null} >
+        <CacheProvider value={cache}>
+          <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+          />
+        </CacheProvider>
+      </ServerStyleContext.Provider>
+      ,
       {
         onAllReady() {
           shellRendered = true;
@@ -95,46 +108,31 @@ function handleBrowserRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  return new Promise((resolve, reject) => {
-    let shellRendered = false;
-    const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
-      {
-        onShellReady() {
-          shellRendered = true;
-          const body = new PassThrough();
-          const stream = createReadableStreamFromReadable(body);
+  const cache = createEmotionCache()
+  const { extractCriticalToChunks } = createEmotionServer(cache)
 
-          responseHeaders.set("Content-Type", "text/html");
+  const html = renderToString(
+    <ServerStyleContext.Provider value={null}>
+      <CacheProvider value={cache}>
+        <RemixServer context={remixContext} url={request.url} />
+      </CacheProvider>
+    </ServerStyleContext.Provider>,
+  )
 
-          resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            })
-          );
+  const chunks = extractCriticalToChunks(html)
 
-          pipe(body);
-        },
-        onShellError(error: unknown) {
-          reject(error);
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500;
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error);
-          }
-        },
-      }
-    );
+  const markup = renderToString(
+    <ServerStyleContext.Provider value={chunks.styles}>
+      <CacheProvider value={cache}>
+        <RemixServer context={remixContext} url={request.url} />
+      </CacheProvider>
+    </ServerStyleContext.Provider>,
+  )
 
-    setTimeout(abort, ABORT_DELAY);
-  });
+  responseHeaders.set('Content-Type', 'text/html')
+
+  return new Response(`<!DOCTYPE html>${markup}`, {
+    status: responseStatusCode,
+    headers: responseHeaders,
+  })
 }
