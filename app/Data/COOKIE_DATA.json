@@ -1,5 +1,5 @@
 [
-  {
+   {
     "type": "Red Velvet",
     "ingredients": "Flour, cake flour, granulated, brown, & powdered sugars, , cocoa powder, butter, eggs, corn starch, corn syrup, buttermilk & baking powders, baking soda, salt, artificial coloring, & flavoring.",
     "allergens": "water, sugar, other stuff",
@@ -9,36 +9,24 @@
     "type": "Snicker Doodle",
     "ingredients": "NA",
     "allergens": "water, sugar, other stuff",
-    "code": "RVC"
+    "code": "SDC"
   },
   {
     "type": "Chocolate Chip",
     "ingredients": "Flour, granulated & brown sugar, butter, eggs, chocolate chips, baking soda,",
     "allergens": "water, sugar, other stuff",
-    "code": "RVC"
-  },
-  {
-    "type": "Oatmeal Raisin",
-    "ingredients": "NA",
-    "allergens": "water, sugar, other stuff",
-    "code": "RVC"
+    "code": "CCC"
   },
   {
     "type": "Chocolate Peanut Butter",
     "ingredients": "Flour, peanut butter, powdered, granulated & brown sugars, chocolate chips, cocoa powder, butter, eggs, baking soda, salt, flavoring",
     "allergens": "allergens",
-    "code": "RVC"
+    "code": "CPB"
   },
   {
-    "type": "Molasses",
-    "ingredients": "Flour, granulated, brown, & granulated sugars, molasses, butter, eggs, baking powder, baking soda, nutmeg, ginger, cinnamon, cloves & flavoring",
-    "allergens": "water, sugar, other stuff",
-    "code": "RVC"
-  },
-  {
-    "type": "Strawberry Shortcake",
+    "type": "Strawberry Cheesecake",
     "ingredients": "Flour, granulated & brown sugar, chocolate chips, strawberries, vanilla sandwich cornstarch, baking powder, cookies, butter, eggs, corn starch, baking powder, baking soda, salt, artificial coloring, & flavoring.",
     "allergens": "Strawberries",
-    "code": "RVC"
+    "code": "SSCC"
   }
 ]

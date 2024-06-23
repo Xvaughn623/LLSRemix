@@ -8,30 +8,26 @@ import {
   FormHelperText,
   Select,
   Input,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Img,
+  IconButton,
 } from "@chakra-ui/react";
-import { useRef, useState, useEffect } from "react";
+import { AddIcon } from "@chakra-ui/icons";
+import { useState, useEffect } from "react";
 
-import emailjs from "@emailjs/browser";
 import { CookieCard } from "./CookieCard";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { STATES } from "../CONSTANTS";
 import { SendEmail } from "./SendEmail";
 import cookies from "../Data/COOKIE_DATA.json";
-
-const orderItems = {
-  RVC: 0,
-  SDC:0,
-  CCC: 0,
-  ORC: 0,
-  CPBC: 0,
-  MC: 0,
-  SSCC: 0,
-};
-
-interface Cookie {
-  type: string;
-  allergens: number;
-}
 
 export interface IFormInput {
   firstName: string;
@@ -42,8 +38,7 @@ export interface IFormInput {
   city: string;
   state: string;
   zipCode: number;
-  //totalCookieAmount: number;
-  customersOrderedItems: object;
+  customersOrderedItems: any;
 }
 // Service ID
 
@@ -52,7 +47,7 @@ const fieldStyles = {
   border: "4px",
   borderColor: "chestnut.base",
   color: "chestnut.700",
-  borderRadius: "4px",
+  borderRadius: "8px",
   focusBorderColor: "chestnut.700",
   _hover: { borderColor: "chestnut.800", opacity: 0.5 },
   _placeholder: { color: "inherit", opacity: 0.5 },
@@ -60,28 +55,34 @@ const fieldStyles = {
 };
 
 const CookieForm = () => {
-  const form = useRef();
+  //const form = useRef();
 
-  const { control, handleSubmit, setValue } = useForm<IFormInput>();
-  //: SubmitHandler<IFormInput> submit form type
+  const { control, handleSubmit, setValue, formState: {errors} } = useForm<IFormInput>();
 
   const onSubmit = (data: IFormInput) => {
-    console.log(data);
+    console.log('submitted data: ', data);
     // Commented out so as not to spam my email with tests
-    //SendEmail(data);
+    SendEmail(data);
   };
 
   const [orderItemData, setOrderItemData] = useState({});
 
-  const handleSetItemNum = (num: number, code: string): any => {
-    setOrderItemData({...orderItemData, [code]: num })
+  // all cookies available to map over
+  const [availableCookies, setAvailableCookies] = useState([...cookies])
+  const [selectedCookies, setSelectedCookies] = useState([])
 
-    setValue('customersOrderedItems', orderItemData);
-    console.log('testing set: ', num, code);
+  const handleSetItemNum = (num: number, code: string): void => {
+    setOrderItemData({...orderItemData, [code]: num })
   }
 
   useEffect(() => {
+    console.log('selectedCookies', selectedCookies);
+    console.log('availableCookies', availableCookies);
+  }, [selectedCookies])
+
+  useEffect(() => {
     console.log('order Item Data: ', orderItemData)
+    setValue('customersOrderedItems', {...orderItemData});
   }, [orderItemData])
 
   return (
@@ -91,10 +92,14 @@ const CookieForm = () => {
       padding="16px"
       margin="16px"
     >
-      <Flex flexDirection="column">
-        <Heading alignSelf="center" color="chestnut.800">
+      <Flex flexDirection="column" alignItems="center">
+        <Heading color="chestnut.800">
           Order Cookies!
         </Heading>
+
+        <Text color="red">
+          We are only delivering in Omaha currently! Other areas soon to follow.
+        </Text>
 
         <FormControl>
           <FormLabel fontSize="20px" color="chestnut.800">
@@ -106,6 +111,7 @@ const CookieForm = () => {
               <Controller
                 name="firstName"
                 control={control}
+                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     {...fieldStyles}
@@ -117,6 +123,10 @@ const CookieForm = () => {
                 )}
               />
 
+              {errors.firstName?.type === "required" && (
+                <Text color="red" fontSize="small">First name is Required</Text>
+              )}
+
               <FormHelperText color="chestnut.800">First Name</FormHelperText>
             </Box>
 
@@ -124,6 +134,7 @@ const CookieForm = () => {
               <Controller
                 name="lastName"
                 control={control}
+                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Input
                     {...fieldStyles}
@@ -134,6 +145,11 @@ const CookieForm = () => {
                   />
                 )}
               />
+
+              {errors.lastName?.type === "required" && (
+                <Text color="red" fontSize="small">Last Name is Required</Text>
+              )}
+
               <FormHelperText color="chestnut.800">Last Name</FormHelperText>
             </Box>
           </Flex>
@@ -148,6 +164,7 @@ const CookieForm = () => {
             <Controller
               name="email"
               control={control}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   {...fieldStyles}
@@ -158,6 +175,10 @@ const CookieForm = () => {
                 />
               )}
             />
+
+            {errors.email?.type === "required" && (
+              <Text color="red" fontSize="small">Email is Required</Text>
+            )}
           </Box>
         </FormControl>
 
@@ -170,6 +191,7 @@ const CookieForm = () => {
             <Controller
               name="addressOne"
               control={control}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   {...fieldStyles}
@@ -181,8 +203,12 @@ const CookieForm = () => {
               )}
             />
 
+            {errors.addressOne?.type === "required" && (
+              <Text color="red" fontSize="small">Address One is Required</Text>
+            )}
+
             <FormHelperText color="chestnut.800">
-              Address Field 1
+              Address One
             </FormHelperText>
 
             <Controller
@@ -200,7 +226,7 @@ const CookieForm = () => {
             />
 
             <FormHelperText color="chestnut.800">
-              Address Field 2
+              Address Two
             </FormHelperText>
           </Box>
 
@@ -209,6 +235,7 @@ const CookieForm = () => {
               <Controller
                 name="city"
                 control={control}
+                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Input
                     {...fieldStyles}
@@ -220,6 +247,10 @@ const CookieForm = () => {
                 )}
               />
 
+              {errors.city?.type === "required" && (
+              <Text color="red" fontSize="small">City is Required</Text>
+              )}
+
               <FormHelperText color="chestnut.800">City</FormHelperText>
             </Box>
 
@@ -227,6 +258,7 @@ const CookieForm = () => {
               <Controller
                 name="state"
                 control={control}
+                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Select
                     {...fieldStyles}
@@ -241,6 +273,10 @@ const CookieForm = () => {
                   </Select>
                 )}
               />
+              
+              {errors.state?.type === "required" && (
+              <Text color="red" fontSize="small">State is Required</Text>
+              )}
 
               <FormHelperText color="chestnut.800">State</FormHelperText>
             </Box>
@@ -249,6 +285,7 @@ const CookieForm = () => {
               <Controller
                 name="zipCode"
                 control={control}
+                rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Input
                     {...fieldStyles}
@@ -259,12 +296,14 @@ const CookieForm = () => {
                   />
                 )}
               />
+              {errors.city?.type === "required" && (
+              <Text color="red" fontSize="small">Zip Code is Required</Text>
+              )}
 
               <FormHelperText color="chestnut.800">Zip Code</FormHelperText>
             </Box>
           </Flex>
         </FormControl>
-        <hr />
 
         <Flex
           borderRadius={4}
@@ -272,27 +311,56 @@ const CookieForm = () => {
           flexWrap="wrap"
           gap="32px"
         >
-          {cookies.map((cookie) => {
+          {selectedCookies && selectedCookies.map((cookie: any) => {
             return (
               <Flex flexDirection='column' flex="1 1 0px" justifyContent="flex-end">
-                <Heading
+                <Text
                   textAlign="center"
                   fontSize="24px"
+                  backgroundColor="chestnut.400"
+                  borderRadius="4px 4px 0 0"
+                  textColor="chestnut.800"
                 >
                   {cookie.type}
-                </Heading>
-
+                </Text>
                   <CookieCard
                     key={cookie.type}
                     type={cookie.type}
                     ingredients={cookie.ingredients}
                     allergens={cookie.allergens}
-                    code={cookie.code} // use code to set state in 
+                    code={cookie.code}
                     setItemNum={handleSetItemNum}
                   />
                 </Flex>
             );
           })}
+
+          {availableCookies.length > 0 && 
+            <Menu>
+              <MenuButton
+                isRound
+                backgroundColor="chestnut.base"
+                aria-label="subtract cookie"
+                alignSelf="center"
+                as={IconButton}
+              >
+                <AddIcon />
+              </MenuButton>
+
+              <MenuList>
+                {availableCookies.map((cookie: any) => (
+                  <MenuItem onClick={() => {
+                    setSelectedCookies([...selectedCookies, cookie])
+                    setAvailableCookies(availableCookies.filter(x => x.code !== cookie.code))
+                  }}>
+                    <Img width="25px" mr="8px" src={`./Images/${cookie.code}-Cookie-Icon.png`} />
+                    {cookie.type}
+                  </MenuItem>
+                )
+                )}
+              </MenuList>
+            </Menu>
+          }
         </Flex>
 
         <Button

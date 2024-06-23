@@ -2,44 +2,38 @@ import { Flex, Text, Heading, Img, Box } from "@chakra-ui/react";
 
 const AboutUsPage = () => {
   return (
-    <Flex 
+    <Box
       alignItems="center"
       flexDirection="column"
-      minHeight={[null, null, "100vh", "100vh"]}
-      minWidth={[null, null, "100%", "100%"]}
       backgroundImage='./Images/test1.jpg'
       backgroundAttachment="fixed"
       background-repeat='no-repeat'
       backgroundSize="cover"
       backgroundPosition="center"
     >
-      <Flex
-        paddingBottom="24px"
-        alignItems="center" 
-        flexDirection="column" 
-        width="100%" 
-        backgroundColor="white"
-        borderRadius='4px'
-      >
-          <Img width="200px" src="./Images/Logo-transparent.png"/>
+      <Box alignSelf='center' backgroundColor="chestnut.50">
+        <Img margin="auto" width="200px" src="./Images/Logo-transparent.png" />
+      </Box>
+        
+        
+        <Box backgroundColor='pink.100' textAlign="center">
+          <Heading paddingTop="24px">Who are we?</Heading>
 
-          {/* <Heading paddingTop="24px" textAlign="center">LIFE&apos;S SWEETER SIDE</Heading> */}
+          <Text textAlign="center" padding="0px 32px 0 32px" fontSize="32px">
+            Life's Sweeter Side is family-owned sweets boutique Dedicated to making precious delicacies for your family to enjoy.
+            Our founder and head baker, Nicole Vaughn Is a mother of three that loves to bake cookies, candy, and fun jewelry for all to enjoy.
+          </Text> 
+        </Box>
+          
 
-          <Heading as="h3">Who are we?</Heading>
+        <Box backgroundColor='chestnut.50' textAlign="center" width="100%">
+          <Heading paddingTop="24px">Our Mission</Heading>
 
-          <Text textAlign="center" paddingTop="16px" fontSize="32px">
-            We are a family owned sweets boutique Dedicated to making precious delicacies for your family to enjoy.
-            Our owner Nicole Vaughn Is a mother of three that loves to bake cookies, candy, and fun jewelry for all to enjoy.
-            For more info into Who we are, please see About Me.
+          <Text textAlign="center" fontSize="32px">
+          To make the world a better place one cookie at a time.
           </Text>
-
-          <Heading as="h3" paddingTop="24px">Our Mission</Heading>
-
-          <Text textAlign="center" paddingTop="16px" fontSize="32px">
-          To make the world a better and more delicious place.
-          </Text>
-      </Flex>
-    </Flex>
+        </Box>
+    </Box>
   );
 };
 

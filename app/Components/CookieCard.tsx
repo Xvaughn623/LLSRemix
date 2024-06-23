@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
-  Card,
-  Text,
   Box,
-  CardFooter,
+  Flex,
+  Text,
   Button,
   ButtonGroup,
   IconButton,
@@ -36,18 +35,14 @@ const CookieCard = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    if (!amount) return;
-
     setItemNum(amount, code)
   }, [amount]);
 
   return (
-    <Card
-      backgroundColor="chestnut.100"
-      marginTop="8px"
-    >
-      <CardFooter flexDirection="column" alignItems="center" >
+    <Flex backgroundColor="chestnut.50" justifyContent="center" padding="16px 0 16px 0" borderRadius="0 0 4px 4px">
+      <Flex flexDirection="column" alignItems="center" flex="1">
         {code && (<Img width="50px" src={`./Images/${code}-Cookie-Icon.png`}/>)}
+
         <Box paddingTop="8px">
           $8 Per Cookie
         </Box>
@@ -61,14 +56,14 @@ const CookieCard = ({
           View Cookie
         </Button>
 
-        <ButtonGroup isAttached>
+        <ButtonGroup >
           <IconButton
+            isRound
             backgroundColor="chestnut.base"
             aria-label="subtract cookie"
             icon={<MinusIcon />}
             onClick={() => {
-              console.log('before setting amount: ', amount);
-              setAmount(amount - 1);
+              if(amount > 0) setAmount(amount - 1);
             }}
           />
 
@@ -82,12 +77,12 @@ const CookieCard = ({
           </Text>
 
           <IconButton
+            isRound
             backgroundColor="chestnut.base"
             aria-label="Add cookie"
             icon={<AddIcon />}
             onClick={() => {
-              setAmount(amount + 1);
-              setItemNum(amount, code);
+              if(amount < 6) setAmount(amount + 1);
             }}
           />
         </ButtonGroup>
@@ -104,8 +99,8 @@ const CookieCard = ({
             <Button onClick={onClose}>Close</Button>
           </Modal>
         </Box>
-      </CardFooter>
-    </Card>
+      </Flex>
+    </Flex>
    
   );
 };
