@@ -23,11 +23,11 @@ const CookieModal = ({
   code,
 }: CookieModalProps) => {
   return (
-    <ModalContent alignItems="center" backgroundColor="cream.base" borderColor="red" border="4px">
+    <ModalContent alignItems="center" backgroundColor="cream.base" >
       <ModalHeader>{type}</ModalHeader>
       <ModalBody>
         <Flex justifyContent="center">
-          {code && <Img src={`./Images/Cookie-${code}.jpg`} width={200} />}
+          {code && <Img alt={`${type} Cookie`} src={`./Images/Cookie-${code}.jpg`} width={200} />}
         </Flex>
 
         <Text paddingTop="16px" textAlign="center" fontSize="10px">

@@ -6,7 +6,14 @@ import emailjs from '@emailjs/browser';
 const SendEmail = (data) => {
   // Currently Exposed Public Keys, need to figure out a way to not expose these
   emailjs
-    .send('service_i48nucg', "template_gov2c7x", data, 'c16KK-QJo4soSyH6s');
+    .send('service_i48nucg', "template_gov2c7x", data, 'c16KK-QJo4soSyH6s').then(
+      (response) => {
+        console.log('SUCCESS', response.status, response.text)
+      },
+      (error) => {
+        console.log('SUCCESS', error.status, error.text)
+      }
+    )
 }
 
 export { SendEmail };

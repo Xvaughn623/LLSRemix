@@ -11,7 +11,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { Fonts } from './Fonts/index';
 import { Header } from './Components/Header';
 import { Footer } from './Components/Footer';
-import { Navbar } from "./Components/Navbar";
 import { ServerStyleContext, ClientStyleContext } from './context'
 import { theme } from "./Theme/index";
 

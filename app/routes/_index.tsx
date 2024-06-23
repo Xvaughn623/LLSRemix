@@ -1,15 +1,7 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Flex, Box, Heading, Text, ButtonGroup, Button, Grid } from "@chakra-ui/react";
+import { Flex, Box, Heading, Text, ButtonGroup, Button } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { ItemContainer } from "~/Components/ItemContainer";
 import { useNavigate } from "@remix-run/react";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
 
 export default function Index() {
  const navigate = useNavigate();
@@ -32,20 +24,20 @@ export default function Index() {
         </Box>
 
         <Flex gap="16px" wrap="wrap" justifyContent="center" maxWidth="800px">
-          <ItemContainer name="Red Velvet" description="Indulge in deep chocolatey deliciousness"/>
-          <ItemContainer name="Red Velvet" description="Indulge in deep chocolatey deliciousness"/>
-          <ItemContainer name="Red Velvet" description="Indulge in deep chocolatey deliciousness"/>
-          <ItemContainer name="Red Velvet" description="Indulge in deep chocolatey deliciousness"/>
+          <ItemContainer name="Red Velvet" description="Indulge in deep chocolatey deliciousness" code="RVC"/>
+          <ItemContainer name="Snicker Doodle" description="Classic Doodly Flavor" code="SDC"/>
+          <ItemContainer name="Strawberry Cheesecake" description="Wonderful Fruity Delight" code="SSCC"/>
+          <ItemContainer name="Chocolate Peanut Butter" description="Perfect blend of chocolate and nutty goodness" code="CPB"/>
         </Flex>
       </Flex>
 
-      <Flex backgroundColor="chestnut.50" flexDirection="column" alignItems="center" padding="96px 80px" gap="16px">   
-          <Heading color="chestnut.base">Indulge in Sweetness</Heading>
+      <Flex backgroundColor="chestnut.50" flexDirection="column" alignItems="center" padding="96px 0" gap="16px">   
+          <Heading color="chestnut.base" textAlign="center">Indulge in Sweetness</Heading>
           <Button backgroundColor="chestnut.base" borderRadius="48px" onClick={() => navigate('/AboutUs')}> Discover Our Story</Button>
       </Flex>
 
       <Flex backgroundColor="pink.100" padding="96px 80px" gap="40px" justifyContent="center">
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" justifyContent="center">
           <Text color="chestnut.base">FAQ</Text>
           <Heading color="chestnut.base">Common Questions</Heading>
           <Text color="chestnut.base">Here are some of the common questions that we get</Text>
